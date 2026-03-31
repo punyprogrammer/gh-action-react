@@ -1,4 +1,4 @@
-name: Test Project 
+name: Test and Deploy Project 
 on: push
 jobs:
   test:
@@ -16,5 +16,24 @@ jobs:
         run: npm ci 
       - name: Run tests
         run: npm test
+  deploy:
+    # Everyjob runs gets it own runner its own virtual machine and it is isolated from the other jobs
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get code
+   
+        uses: actions/checkout@v6
+      - name: Install NodeJS
+        uses: actions/setup-node@v6
+        with:
+          node-version: 18
+      - name: Install dependencies
+      # prefer npm ci over npm install because it is faster and more reliable to install dependencies as 
+        run: npm ci 
+      - name: Build project
+        run: npm run build
+      - name: Deploy
+        run: echo "Deploying..."
+  
 
         
