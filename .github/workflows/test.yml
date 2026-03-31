@@ -17,6 +17,9 @@ jobs:
       - name: Run tests
         run: npm test
   deploy:
+    # This is a way to depend on the test job and only run the deploy job if the test job succeeds
+    # By default, jobs run in parallel if they don't depend on each other
+    needs: test
     # Everyjob runs gets it own runner its own virtual machine and it is isolated from the other jobs
     runs-on: ubuntu-latest
     steps:
