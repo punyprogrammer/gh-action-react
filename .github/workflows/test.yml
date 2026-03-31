@@ -1,0 +1,20 @@
+name: Test Project 
+on: push
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get code
+      #This is a existing action that is provided by github to checkout the code from the repository
+        uses: actions/checkout@v3
+      - name: Install NodeJS
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - name: Install dependencies
+      # prefer npm ci over npm install because it is faster and more reliable to install dependencies as 
+        run: npm ci 
+      - name: Run tests
+        run: npm test
+
+        
