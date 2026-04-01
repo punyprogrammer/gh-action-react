@@ -1,5 +1,5 @@
 import './HelpBox.css';
-
+import PropTypes from 'prop-types';
 function HelpBox({ title, text }) {
   return (
     <article className="help-box">
@@ -10,3 +10,7 @@ function HelpBox({ title, text }) {
 }
 
 export default HelpBox;
+HelpBox.propTypes={
+  title: PropTypes.string.isRequired,
+  text: PropTypes.string.isRequired,
+};
