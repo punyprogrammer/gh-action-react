@@ -7,7 +7,7 @@ jobs:
     steps:
       - name: Print context
         # This is a way to print the context of the workflow
-        run: echo "Context: ${{ toJson(github) }}"
+        run: 'echo "Context: ${{ toJson(github) }}"'
   test:
     runs-on: ubuntu-latest
     steps:
