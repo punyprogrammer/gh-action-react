@@ -9,10 +9,16 @@ jobs:
     steps:
       - name: Get code
         uses: actions/checkout@v6
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
+
       - name: Install dependencies
-        run: npm ci 
+        run: npm ci
       - name: Lint code
-        run: npm run lint 
+        run: npm run lint
 
   test:
     runs-on: ubuntu-latest
@@ -20,23 +26,33 @@ jobs:
     steps:
       - name: Get code
         uses: actions/checkout@v6
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
       - name: Install dependencies
         run: npm ci
       - name: Run tests
         run: npm run test
- 
+
   build-and-upload-artifact:
     runs-on: ubuntu-latest
     needs: test
     outputs:
       script-file: ${{steps.publish.outputs.script-file}}
     steps:
-      - name: Get code 
+      - name: Get code
         uses: actions/checkout@v6
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
       - name: Install Dependencies
-        run: npm ci 
-      - name: Build Project 
-        run: npm run build 
+        run: npm ci
+      - name: Build Project
+        run: npm run build
 
       - name: Publish JS Files
         id: publish
@@ -48,17 +64,16 @@ jobs:
           name: dist-files
           path: dist
   deploy:
-      runs-on: ubuntu-latest
-      needs: build-and-upload-artifact
-      steps:
-        - name: Download Artifact
-          uses: actions/download-artifact@v6
-          with:
-            name: dist-files
-        - name: Output contents
-          run: ls
-        - name: Output script file
-          run: echo "${{ needs.build-and-upload-artifact.outputs.script-file }}"
-        - name: Deploy
-          run: echo "Deploying..."
-     
+    runs-on: ubuntu-latest
+    needs: build-and-upload-artifact
+    steps:
+      - name: Download Artifact
+        uses: actions/download-artifact@v6
+        with:
+          name: dist-files
+      - name: Output contents
+        run: ls
+      - name: Output script file
+        run: echo "${{ needs.build-and-upload-artifact.outputs.script-file }}"
+      - name: Deploy
+        run: echo "Deploying..."
