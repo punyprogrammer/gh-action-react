@@ -28,6 +28,8 @@ jobs:
   build-and-upload-artifact:
     runs-on: ubuntu-latest
     needs: test
+    outputs:
+      script-file: ${{steps.publish.outputs.script-file}}
     steps:
       - name: Get code 
         uses: actions/checkout@v6
@@ -35,6 +37,11 @@ jobs:
         run: npm ci 
       - name: Build Project 
         run: npm run build 
+
+      - name: Publish JS Files
+        id: publish
+        run: find dist/assets/*.js -type f -execdir echo 'script-file={}' >> $GITHUB_OUTPUT ';'
+
       - name: Upload Artifact
         uses: actions/upload-artifact@v6
         with:
